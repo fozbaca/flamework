@@ -96,7 +96,8 @@
 	#################################################################
 
 	function login_do_logout(){
-
+		$GLOBALS['cfg']['user'] = null;
+		$GLOBALS['cfg']['user_ok'] = 0;
 		login_unset_cookie($GLOBALS['cfg']['auth_cookie_name']);
 	}
 
