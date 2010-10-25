@@ -32,14 +32,18 @@
 	#################################################################
 
 	function login_is_loggedin(){
-		return (($GLOBALS['cfg']['user']) && ($GLOBALS['cfg']['user_ok'])) ? 1 : 0;
+		return $GLOBALS['cfg']['user']['id'] ? true : false;
 	}
 
 	#################################################################
 
 	function login_check_login(){
 
-		if (($GLOBALS['cfg']['user']) && ($GLOBALS['cfg']['user_ok'])){
+		if (! $GLOBALS['cfg']['enable_feature_signin']){
+			return 0;
+		}
+
+		if ($GLOBALS['cfg']['user']['id']){
 			return 1;
 		}
 
@@ -71,7 +75,6 @@
 			return 0;
 		}
 
-		$GLOBALS['cfg']['user_ok'] = 1;
 		$GLOBALS['cfg']['user'] = $user;
 
 		return 1;

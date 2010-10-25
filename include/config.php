@@ -74,7 +74,6 @@
 	#
 
 	$GLOBALS['cfg']['user'] = null;
-	$GLOBALS['cfg']['user_ok'] = 0;
 
 	$GLOBALS['cfg']['smarty_compile'] = 1;
 
@@ -130,5 +129,8 @@
 	# Feature flags
 	#
 
+	$GLOBALS['cfg']['enable_feature_signup'] = 1;
+	$GLOBALS['cfg']['enable_feature_signin'] = 1;
+	$GLOBALS['cfg']['enable_feature_account_delete'] = 1;
 	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 1;
 ?>
