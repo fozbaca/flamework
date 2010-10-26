@@ -11,7 +11,7 @@ CREATE TABLE `Users` (
   `user_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `cluster_id` tinyint(3) unsigned NOT NULL,
   PRIMARY KEY (`user_id`),
-  UNIQUE KEY `by_email` (`email`),
+  UNIQUE KEY `by_email` (`email`,`deleted`),
   UNIQUE KEY `by_username` (`username`,`deleted`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
