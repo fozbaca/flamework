@@ -48,7 +48,10 @@
 		}
 
 		if ($ok){
-			if (!users_update_password($GLOBALS['cfg']['user'], $new_pass1)){
+
+			$rsp = users_update_password($GLOBALS['cfg']['user'], $new_pass1);
+
+			if (! $rsp['ok']){
 
 				$smarty->assign('error_fail', 1);
 				$ok = 0;

@@ -93,16 +93,35 @@
 
 	function users_delete_user(&$user){
 
-		$now = time();
+		# rely on mysql to enforce a unique key
+		# on (email, deleted)
 
-		$new_email = "{$user['email']}.DELETED.{$now}";
+		$new_email = "{$user['email']}.DELETED";
 
-		return users_update_user($user, array(
+		$rsp = users_update_user($user, array(
 			'deleted'	=> time(),
 			'email'		=> AddSlashes($new_email),
 
 			# reset the password here ?
 		));
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		#
+		# check to see if the application (outside of
+		# flamework) has defined a callback function
+		# to run once the user has been 'deleted' in
+		# the database.
+		#
+
+		if (function_exists('users_delete_user_callback')){
+			users_reload_user($user);
+			$rsp['callback'] = users_delete_user_callback($user);
+		}
+
+		return $rsp;
 	}
 
 	#################################################################
