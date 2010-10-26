@@ -5,10 +5,9 @@
 
 	include("include/init.php");
 
-	if (! $GLOBALS['cfg']['enable_feature_signup']){
-		$GLOBALS['error']['signup_disabled'] = 1;
-		$smarty->display('page_signup.txt');
-		exit();
+	if (!$GLOBALS['cfg']['enable_feature_signup']){
+		$smarty->display('page_signup_disabled.txt');
+		exit;
 	}
 
 	login_ensure_loggedout();
@@ -89,7 +88,7 @@
 
 			if ($user['id']){
 
-				$redir = ($redir) ? $redir : '/';
+				$redir = strlen($redir) ? $redir : '/';
 
 				login_do_login($user, $redir);
 				exit;

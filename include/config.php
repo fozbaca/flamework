@@ -136,6 +136,4 @@
 	$GLOBALS['cfg']['enable_feature_signin'] = 1;
 	$GLOBALS['cfg']['enable_feature_account_delete'] = 1;
 	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 1;
-
-	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 1;
 ?>
