@@ -130,6 +130,7 @@
 
 	#
 	# Feature flags
+	# See also: http://code.flickr.com/blog/2009/12/02/flipping-out/
 	#
 
 	$GLOBALS['cfg']['enable_feature_signup'] = 1;
