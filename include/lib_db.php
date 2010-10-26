@@ -304,7 +304,7 @@
 		$ret = _db_fetch(preg_replace(array('/^SELECT .* FROM/i', '/ ORDER BY .*$/'), array('SELECT COUNT(*) FROM', ''), $sql), $cluster, $k);
 		if (!$ret['ok']) return $ret;
 
-		$total_count = array_pop($ret['rows'][0]);
+		$total_count = intval(array_pop($ret['rows'][0]));
 		$page_count = ceil($total_count / $per_page);
 
 

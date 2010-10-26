@@ -5,14 +5,10 @@
 
 	include("include/init.php");
 
+	login_ensure_loggedout();
+
 	if (! $GLOBALS['cfg']['enable_feature_password_retrieval']){
 		error_404();
-	}
-
-	if (login_is_loggedin()){
-
-		header("location: /");
-		exit();
 	}
 
 	$reset_code = post_str('reset');

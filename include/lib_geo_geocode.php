@@ -63,21 +63,22 @@
 			'error' => 'unknown error'
 		);
 		
-		if ($http_rsp['ok']) {
+		if ($http_rsp['ok']){
 			
 			# pass in a 1 to disable 'shit-mode'
 			$geocode_response = json_decode($http_rsp['body'], 1);
 			
-			if ($geocode_response['ResultSet']['Found'] == 1) {
+			if ($geocode_response['ResultSet']['Found'] == 1){
 				
 				$results = $geocode_response['ResultSet']['Results'][0];
 				
 				$rsp['ok'] = 1;
-				$rsp['error'] = null;
 				$rsp['latitude'] = (float)$results['latitude'];
 				$rsp['longitude'] = (float)$results['longitude'];
 				$rsp['extras']['woeid'] = (float)$results['woeid'];
-			} else {
+			}
+
+			else {
 				$rsp['error'] = 'could not geocode';
 			}
 			
@@ -85,5 +86,6 @@
 		
 		return $rsp;
 	}
-	
+
+	#################################################################	
 ?>

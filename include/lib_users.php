@@ -71,11 +71,11 @@
 		$rsp = db_update('Users', $update, "id=$user[id]");
 
 		if (!$rsp['ok']){
-			return null;
+			return $rsp;
 		}
 
 		unset($GLOBALS['user_local_cache'][$user['id']]);
-		return 1;
+		return $rsp;
 	}
 
 	#################################################################
@@ -93,9 +93,13 @@
 
 	function users_delete_user(&$user){
 
+		$now = time();
+
+		$new_email = "{$user['email']}.DELETED.{$now}";
+
 		return users_update_user($user, array(
 			'deleted'	=> time(),
-			'email'		=> $user['email'] . '.DELETED',
+			'email'		=> AddSlashes($new_email),
 
 			# reset the password here ?
 		));
@@ -260,5 +264,4 @@
 	}
 
 	#################################################################
-
 ?>

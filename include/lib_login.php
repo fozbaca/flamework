@@ -5,34 +5,38 @@
 
 	#################################################################
 
+	#
+	# make sure the users is signed in. if not, bounce them
+	# to the login page, with an optional post-login redirect.
+	#
+
 	function login_ensure_loggedin($redir=null){
 
-		if (!login_check_login()){
-			if ($redir){
-				header("location: /signin/?redir=".urlencode($redir));
-			}else{
-				header("location: /signin/");
-			}
-			exit;
+		if ($GLOBALS['cfg']['user']['id']) return;
+
+		if ($redir){
+			header("location: /signin/?redir=".urlencode($redir));
+		}else{
+			header("location: /signin/");
 		}
+		exit;
 	}
 
 	#################################################################
 
-	function login_ensure_loggedout($redir="/"){
+	#
+	# make sure the user is NOT logged in. if they are, redirect them,
+	# optionally logging them out first.
+	#
 
-		if (login_check_login()){
-			login_do_logout();
-			header("location: $redir");
-			exit;
-		}
+	function login_ensure_loggedout($redir="/", $force_logout=false){
 
-	}
+		if (!$GLOBALS['cfg']['user']['id']) return;
 
-	#################################################################
+		if ($force_logout) login_do_logout();
 
-	function login_is_loggedin(){
-		return $GLOBALS['cfg']['user']['id'] ? true : false;
+		header("location: $redir");
+		exit;
 	}
 
 	#################################################################
@@ -57,13 +61,13 @@
 
 		list($user_id, $password) = explode(':', $auth_cookie, 2);
 
-		if (! $user_id){
+		if (!$user_id){
 			return 0;
 		}
 
 		$user = users_get_by_id($user_id);
 
-		if (! $user){
+		if (!$user){
 			return 0;
 		}
 

@@ -22,6 +22,4 @@
 <p><a href="/forgot/">Forgotten your password?</a></p>
 {/if}
 
-{/if}
-
 {include file='inc_foot.txt'}
