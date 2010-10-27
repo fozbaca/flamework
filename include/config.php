@@ -57,7 +57,10 @@
 	$GLOBALS['cfg']['auth_cookie_domain'] = parse_url($GLOBALS['cfg']['abs_root_url'], 1);
 	$GLOBALS['cfg']['auth_cookie_name'] = 'a';
 
-	$GLOBALS['cfg']['crumb_ttl_default'] = 300;	# seconds
+	$GLOBALS['cfg']['auth_cookie_secure'] = 0;		# see also: http://github.com/blog/737-sidejack-prevention
+	$GLOBALS['cfg']['auth_cookie_httponly'] = 0;
+
+	$GLOBALS['cfg']['crumb_ttl_default'] = 300;		# seconds
 
 	$GLOBALS['cfg']['rewrite_static_urls'] = array(
 		# '/foo' => '/bar/',

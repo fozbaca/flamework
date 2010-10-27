@@ -130,13 +130,33 @@
 	#################################################################
 
 	function login_set_cookie($name, $value, $expire=0, $path='/'){
-		$res = setcookie($name, $value, $expire, $path, $GLOBALS['cfg']['auth_cookie_domain']);
+		$res = setcookie(
+			$name,
+			$value,
+			$expire,
+			$path,
+			$GLOBALS['cfg']['auth_cookie_domain'],
+			$GLOBALS['cfg']['auth_cookie_secure'],
+			$GLOBALS['cfg']['auth_cookie_httponly']
+		);
 	}
 
 	#################################################################
 
-	function login_unset_cookie($name){
-		login_set_cookie($name, "", time() - 3600);
+	function login_unset_cookie($name, $path='/'){
+
+		$value = '';
+		$expire = time() - 3600;
+
+		$res = setcookie(
+			$name,
+			$value,
+			$expire,
+			$path,
+			$GLOBALS['cfg']['auth_cookie_domain'],
+			$GLOBALS['cfg']['auth_cookie_secure'],
+			$GLOBALS['cfg']['auth_cookie_httponly']
+		);
 	}
 
 	#################################################################
