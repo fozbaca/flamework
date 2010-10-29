@@ -13,7 +13,7 @@
 	# (20101028/straup)
 	#
 
-	function user_agent_info($agent=''){
+	function user_agent_info($agent='', $add_extras=0){
 
 		# see also: http://www.php.net/manual/en/function.get-browser.php#92310
 
@@ -58,7 +58,45 @@
 			$info[$k] = $v;
 		}
 
+		if ($add_extras){
+			user_agent_info_add_extras($info, $agent);
+		}
+
 		return $info;
+	}
+
+	#################################################################
+
+	# Note the pass-by-ref
+
+	function user_agent_info_add_extras(&$info, $agent){
+
+		if (preg_match("/(android)\s+(\d+\.\d+)/i", $agent, $m)){
+
+			$info[$m[1]] = floatval($m[2]);
+		}
+
+		else if (preg_match("#(symbian)os/(\d+\.\d+);\s+(series(?:\d+))/(\d+\.\d+)\s+(nokia)([0-9a-z\-]+)#i", $agent, $m)){
+
+			$info[$m[1]] = floatval($m[2]);	# symbian => 9.3
+			$info[$m[3]] = floatval($m[4]);	# series60 => 3.2
+			$info[$m[5]] = $m[6];			# nokia => 'e72-1'
+		}
+
+		else if (preg_match("/(i(?:pad|phone))/i", $agent, $m)){
+
+			$ima = $m[1];
+			$version = null;
+
+			if (preg_match("/OS\s+(?:(\d+)_(\d+))/i", $agent, $m)){
+				$info[$ima] = 1;
+				$info['ios'] = floatval("{$m[1]}.{$m[2]}");
+			}
+		}
+
+		# chromeframe
+
+		# blackberry
 	}
 
 	#################################################################
