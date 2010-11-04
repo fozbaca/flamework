@@ -135,6 +135,10 @@
 
 	function users_get_by_id($id){
 
+		if (isset($GLOBALS['user_local_cache'][$id])){
+			return $GLOBALS['user_local_cache'][$id];
+		}
+
 		$user = db_single(db_fetch("SELECT * FROM Users WHERE id=".intval($id)));
 
 		$GLOBALS['user_local_cache'][$id] = $user;
