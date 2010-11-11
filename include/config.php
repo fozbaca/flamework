@@ -42,8 +42,9 @@
 	$GLOBALS['cfg']['smarty_template_dir'] = realpath(dirname(__FILE__) . '/../templates/');
 	$GLOBALS['cfg']['smarty_compile_dir'] = realpath(dirname(__FILE__) . '/../templates_c/');
 
-
+	#
 	# No, seriously. Change these...
+	#
 
 	$GLOBALS['cfg']['crypto_cookie_secret'] = '';
 	$GLOBALS['cfg']['crypto_password_secret'] = '';
@@ -53,6 +54,8 @@
 	#
 	# Things you may need to tweak
 	#
+
+	$GLOBALS['cfg']['site_disabled'] = 0;
 
 	$GLOBALS['cfg']['auth_cookie_domain'] = parse_url($GLOBALS['cfg']['abs_root_url'], 1);
 	$GLOBALS['cfg']['auth_cookie_name'] = 'a';
