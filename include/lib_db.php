@@ -59,7 +59,13 @@
 	function db_write($sql){		return _db_write($sql, 'main'); }
 	function db_write_users($k, $sql){	return _db_write($sql, 'users', $k); }
 
-	function db_tickets_write($sql){ 	return _db_write($sql, 'tickets'); }
+	function db_tickets_write($sql){
+
+		$count = count(array_keys($GLOBALS['cfg']['db_tickets']['host']));
+		$k = ($count == 1) ? 1 : rand(1, $count);
+
+		return _db_write($sql, 'tickets', $k);
+	}
 
 	#################################################################
 
