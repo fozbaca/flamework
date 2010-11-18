@@ -150,8 +150,8 @@
 	$this_is_shell		= $_SERVER['SHELL'] ? 1 : 0;
 	$this_is_webpage	= $this_is_apache && !$this_is_api ? 1 : 0;
 
-	$cfg['admin_flags_no_db']		= $_GET['no_db'] ? 1 : 0;
-	$cfg['admin_flags_show_notices']	= $_GET['debug'] ? 1 : 0;
+	$cfg['admin_flags_no_db'] = (($GLOBALS['cfg']['enable_feature_admin_flags']) && ($_GET['no_db'])) ? 1 : 0;
+	$cfg['admin_flags_show_notices'] = (($GLOBALS['cfg']['enable_feature_admin_flags']) && ($_GET['debug'])) ? 1 : 0;
 
 
 	#
@@ -162,7 +162,7 @@
 	loadlib('smarty');	# smarty comes next, since other libs register smarty modules
 	loadlib('utf8');	# make sure utf8/header stuff is present in case we need to take the site down
 
-	if ($GLOBALS['cfg']['site_disabled']){
+	if (($GLOBALS['cfg']['site_disabled']) && (! $this_is_shell)){
 		$smarty->display("page_site_disabled.txt");
 		exit();
 	}
