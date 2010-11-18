@@ -61,8 +61,15 @@
 
 	function db_tickets_write($sql){
 
-		$count = count(array_keys($GLOBALS['cfg']['db_tickets']['host']));
-		$k = ($count == 1) ? 1 : rand(1, $count);
+		$k = null;
+
+		# aka, not running in poormans mode
+
+		if (is_array($GLOBALS['cfg']['db_tickets']['host'])){
+
+			$count = count(array_keys($GLOBALS['cfg']['db_tickets']['host']));
+			$k = ($count == 1) ? 1 : rand(1, $count);
+		}
 
 		return _db_write($sql, 'tickets', $k);
 	}
