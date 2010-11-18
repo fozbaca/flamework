@@ -59,7 +59,7 @@
 	function db_write($sql){		return _db_write($sql, 'main'); }
 	function db_write_users($k, $sql){	return _db_write($sql, 'users', $k); }
 
-	function db_tickets_write($sql){		return _db_write($sql, 'tickets'); }
+	function db_tickets_write($sql){ 	return _db_write($sql, 'tickets'); }
 
 	#################################################################
 
@@ -75,6 +75,11 @@
 		if ($k){
 			$host = $host[$k];
 			$name = $name[$k];
+		}
+
+		if (is_array($host)){
+			shuffle($host);
+			$host = $host[0];
 		}
 
 		if (!$host){
