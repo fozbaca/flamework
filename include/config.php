@@ -196,6 +196,4 @@
 
 	$GLOBALS['cfg']['enable_feature_api'] = 0;	# you should probably leave this off for now
 
-	$GLOBALS['cfg']['enable_feature_admin_flags'] = 1;
-
 ?>
