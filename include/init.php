@@ -150,16 +150,24 @@
 	$this_is_shell		= $_SERVER['SHELL'] ? 1 : 0;
 	$this_is_webpage	= $this_is_apache && !$this_is_api ? 1 : 0;
 
-	$cfg['admin_flags_no_db']		= $_GET['no_db'] ? 1 : 0;
-	$cfg['admin_flags_show_notices']	= $_GET['debug'] ? 1 : 0;
+	$cfg['admin_flags_no_db'] = ($_GET['no_db']) ? 1 : 0;
+	$cfg['admin_flags_show_notices'] = ($_GET['debug']) ? 1 : 0;
 
 
 	#
 	# load some libraries which we will 'always' need
 	#
 
+	loadlib('auth');
 	loadlib('log');		# logging comes first, so that other modules can log during startup
 	loadlib('smarty');	# smarty comes next, since other libs register smarty modules
+	loadlib('utf8');	# make sure utf8/header stuff is present in case we need to take the site down
+
+	if (($GLOBALS['cfg']['site_disabled']) && (! $this_is_shell)){
+		$smarty->display("page_site_disabled.txt");
+		exit();
+	}
+
 	loadlib('error');
 	loadlib('sanitize');
 	loadlib('db');
@@ -169,7 +177,6 @@
 	loadlib('crumb');
 	loadlib('login');
 	loadlib('email');
-	loadlib('utf8');
 	#loadlib('args');
 	#loadlib('calendar');
 	loadlib('users');

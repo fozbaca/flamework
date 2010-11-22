@@ -60,6 +60,14 @@
 	$GLOBALS['cfg']['auth_cookie_secure'] = 0;		# see also: http://github.com/blog/737-sidejack-prevention
 	$GLOBALS['cfg']['auth_cookie_httponly'] = 0;
 
+	# $GLOBALS['cfg']['auth_enable_poormans_god_auth'] = 0;
+
+	# $GLOBALS['cfg']['auth_poormans_god_auth'] = array(
+	# 	xxx => array(
+	# 		'roles' => array( 'staff' ),
+	# 	),
+	# );
+
 	$GLOBALS['cfg']['crumb_ttl_default'] = 300;		# seconds
 
 	$GLOBALS['cfg']['rewrite_static_urls'] = array(
