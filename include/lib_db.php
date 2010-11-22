@@ -125,7 +125,7 @@
 
 		log_notice('db', "DB-$cluster_key: Connect", $end-$start);
 
-		if (!$GLOBALS['db_conns'][$cluster_key] || $GLOBALS['cfg']['admin_flags_no_db']){
+		if (!$GLOBALS['db_conns'][$cluster_key] || (auth_has_role('staff') && $GLOBALS['cfg']['admin_flags_no_db'])){
 
 			log_fatal("Connection to database cluster '$cluster_key' failed");
 		}
