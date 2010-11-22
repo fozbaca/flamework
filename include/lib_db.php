@@ -43,6 +43,9 @@
 	function db_insert($tbl, $hash){		return _db_insert($tbl, $hash, 'main'); }
 	function db_insert_users($k, $tbl, $hash){	return _db_insert($tbl, $hash, 'users', $k); }
 
+	function db_insert_many($tbl, $rows){		return _db_insert_many($tbl, $rows, 'main'); }
+	function db_insert_many_users($tbl, $rows){	return _db_insert_many($tbl, $rows, 'users', $k); }
+
 	function db_insert_dupe($tbl, $hash, $hash2){		return _db_insert_dupe($tbl, $hash, $hash2, 'main'); }
 	function db_insert_dupe_users($k, $tbl, $hash, $hash2){	return _db_insert_dupe($tbl, $hash, $hash2, 'users', $k); }
 
@@ -59,7 +62,20 @@
 	function db_write($sql){		return _db_write($sql, 'main'); }
 	function db_write_users($k, $sql){	return _db_write($sql, 'users', $k); }
 
-	function db_tickets_write($sql){		return _db_write($sql, 'tickets'); }
+	function db_tickets_write($sql){
+
+		$k = null;
+
+		# aka, not running in poormans mode
+
+		if (is_array($GLOBALS['cfg']['db_tickets']['host'])){
+
+			$count = count(array_keys($GLOBALS['cfg']['db_tickets']['host']));
+			$k = ($count == 1) ? 1 : rand(1, $count);
+		}
+
+		return _db_write($sql, 'tickets', $k);
+	}
 
 	#################################################################
 
@@ -75,6 +91,11 @@
 		if ($k){
 			$host = $host[$k];
 			$name = $name[$k];
+		}
+
+		if (is_array($host)){
+			shuffle($host);
+			$host = $host[0];
 		}
 
 		if (!$host){
@@ -217,6 +238,21 @@
 		}
 
 		return _db_write("INSERT INTO $tbl (`".implode('`,`',$fields)."`) VALUES ('".implode("','",$hash)."') ON DUPLICATE KEY UPDATE ".implode(', ',$bits), $cluster, $shard);
+	}
+
+	#################################################################
+
+	function _db_insert_many($tbl, $rows, $cluster, $shard=null){
+
+		$fields = array_keys($rows[0]);
+		$values = array();
+
+		foreach ($rows as $row){
+
+			$values[] = "('" . implode("','", $row) . "')";
+		}
+
+		return _db_write("INSERT INTO $tbl (`".implode('`,`',$fields)."`) VALUES " . implode(",", $values), $cluster, $k);
 	}
 
 	#################################################################

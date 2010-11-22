@@ -42,8 +42,9 @@
 	$GLOBALS['cfg']['smarty_template_dir'] = realpath(dirname(__FILE__) . '/../templates/');
 	$GLOBALS['cfg']['smarty_compile_dir'] = realpath(dirname(__FILE__) . '/../templates_c/');
 
-
+	#
 	# No, seriously. Change these...
+	#
 
 	$GLOBALS['cfg']['crypto_cookie_secret'] = '';
 	$GLOBALS['cfg']['crypto_password_secret'] = '';
@@ -53,6 +54,8 @@
 	#
 	# Things you may need to tweak
 	#
+
+	$GLOBALS['cfg']['site_disabled'] = 0;
 
 	$GLOBALS['cfg']['auth_cookie_domain'] = parse_url($GLOBALS['cfg']['abs_root_url'], 1);
 	$GLOBALS['cfg']['auth_cookie_name'] = 'a';
@@ -78,8 +81,6 @@
 	$GLOBALS['cfg']['email_from_email']	= 'admin@ourapp.com';
 	$GLOBALS['cfg']['auto_email_args']	= '-fadmin@ourapp.com';
 
-
-
 	#
 	# Things you can probably not worry about
 	#
@@ -93,7 +94,6 @@
 	$GLOBALS['cfg']['check_notices'] = 1;
 
 	$GLOBALS['cfg']['db_profiling'] = 0;
-
 
 	#
 	# db_enable_poormans_*
@@ -140,6 +140,51 @@
 	$GLOBALS['cfg']['geo_geocoding_yahoo_apikey'] = '';
 
 	#
+	# API stuff
+	# this is still a work in progress - see also 'enable_feature_api' below
+	#
+
+	$GLOBALS['cfg']['api'] = array(
+
+		'formats' => array(
+			'default' => 'xml',
+			'current' => '',
+
+			'valid' => array(
+				'xml',
+				'json',
+				'jsonp',
+			),
+		),
+
+		'methods' => array(
+			# Methods are left to users to define but
+			# here's a cheeky example:
+			#
+			# 'example.tunablasters.addTunaBlaster' => array(
+			# 	'documented' => 1,
+			# 	'enabled' => 1,
+			# 	'library' => 'api_tunablasters',
+			# ),
+		),
+	);
+
+	#
+	# God auth
+	#
+
+	$GLOBALS['cfg']['auth_enable_poormans_god_auth'] = 0;
+
+	$GLOBALS['cfg']['auth_poormans_god_auth'] = array(
+
+		# poormans god auth is keyed off a user's UID
+		#
+		# xxx => array(
+		# 	'roles' => array( 'staff' ),
+		# ),
+	);
+
+	#
 	# Feature flags
 	# See also: http://code.flickr.com/blog/2009/12/02/flipping-out/
 	#
@@ -148,4 +193,9 @@
 	$GLOBALS['cfg']['enable_feature_signin'] = 1;
 	$GLOBALS['cfg']['enable_feature_account_delete'] = 1;
 	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 1;
+
+	$GLOBALS['cfg']['enable_feature_api'] = 0;	# you should probably leave this off for now
+
+	$GLOBALS['cfg']['enable_feature_admin_flags'] = 1;
+
 ?>

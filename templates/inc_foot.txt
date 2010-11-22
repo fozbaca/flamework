@@ -4,7 +4,7 @@
 		Footer
 	</div>
 
-{if 'staff'|@auth_has_role&& $cfg.admin_flags_show_notices}
+{if 'staff'|@auth_has_role && $cfg.admin_flags_show_notices}
 <div style="padding: 2em;">
 	{timings}
 </div>

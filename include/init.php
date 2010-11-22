@@ -153,7 +153,6 @@
 	$cfg['admin_flags_no_db'] = ($_GET['no_db']) ? 1 : 0;
 	$cfg['admin_flags_show_notices'] = ($_GET['debug']) ? 1 : 0;
 
-
 	#
 	# load some libraries which we will 'always' need
 	#
