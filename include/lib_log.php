@@ -109,6 +109,10 @@
 
 	function _log_handler_html($level, $msg, $more = array()){
 
+		if (! auth_has_role('staff')){
+			return;
+		}
+
 		# only shows notices if we asked to see them
 		if ($level == 'notice' && !$GLOBALS['cfg']['admin_flags_show_notices']) return;
 

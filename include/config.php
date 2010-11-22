@@ -162,6 +162,21 @@
 	);
 
 	#
+	# God auth
+	#
+
+	$GLOBALS['cfg']['auth_enable_poormans_god_auth'] = 0;
+
+	$GLOBALS['cfg']['auth_poormans_god_auth'] = array(
+
+		# poormans god auth is keyed off a user's UID
+		#
+		# xxx => array(
+		# 	'roles' => array( 'staff' ),
+		# ),
+	);
+
+	#
 	# Feature flags
 	# See also: http://code.flickr.com/blog/2009/12/02/flipping-out/
 	#
@@ -174,4 +189,5 @@
 	$GLOBALS['cfg']['enable_feature_api'] = 0;	# you should probably leave this off for now
 
 	$GLOBALS['cfg']['enable_feature_admin_flags'] = 1;
+
 ?>

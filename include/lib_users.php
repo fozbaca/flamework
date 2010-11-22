@@ -142,7 +142,6 @@
 		$user = db_single(db_fetch("SELECT * FROM Users WHERE id=".intval($id)));
 
 		$GLOBALS['user_local_cache'][$id] = $user;
-
 		return $user;
 	}
 
