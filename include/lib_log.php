@@ -28,6 +28,7 @@
 
 	$GLOBALS['log_html_colors'] = array(
 		'db'		=> '#eef,#000',
+		'cache'		=> '#fdd,#000',
 		'smarty'	=> '#efe,#000',
 		'http'		=> '#ffe,#000',
 		'_error'	=> '#fcc,#000',

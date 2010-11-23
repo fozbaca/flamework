@@ -51,7 +51,9 @@
 
 		$user['id'] = $rsp['insert_id'];
 
-		$GLOBALS['user_local_cache'][$user['id']] = $user;
+		$cache_key = "user_{$user['id']}";
+		cache_set($cache_key, $user, 'cache locally');
+
 		return $user;
 	}
 
@@ -74,7 +76,9 @@
 			return $rsp;
 		}
 
-		unset($GLOBALS['user_local_cache'][$user['id']]);
+		$cache_key = "user_{$user['id']}";
+		cache_unset($cache_key);
+
 		return $rsp;
 	}
 
@@ -135,13 +139,16 @@
 
 	function users_get_by_id($id){
 
-		if (isset($GLOBALS['user_local_cache'][$id])){
-			return $GLOBALS['user_local_cache'][$id];
+		$cache_key = "user_{$id}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
 		}
 
 		$user = db_single(db_fetch("SELECT * FROM Users WHERE id=".intval($id)));
 
-		$GLOBALS['user_local_cache'][$id] = $user;
+		cache_set($cache_key, $user, 'cache locally');
 		return $user;
 	}
 
