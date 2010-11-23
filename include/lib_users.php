@@ -293,4 +293,29 @@
 	}
 
 	#################################################################
+
+	function users_ensure_valid_user_from_url($method=''){
+
+		if (strtolower($method) == 'post'){
+			$user_id = post_int64('user_id');
+		}
+
+		else {
+			$user_id = get_int64('user_id');
+		}
+
+		if (! $user_id){
+			error_404();
+		}
+
+		$user = users_get_by_id($user_id);
+
+		if ((! $user) || ($user['deleted'])){
+			error_404();
+		}
+
+		return $user;
+	}
+
+	#################################################################
 ?>
