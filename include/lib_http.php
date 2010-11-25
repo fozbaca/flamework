@@ -17,13 +17,13 @@
 
 	function http_get($url, $headers=array(), $head_only=0){
 
-		$headers = _http_prepare_outgoing_headers($headers);
+		$headers_prepped = _http_prepare_outgoing_headers($headers);
 
 		$ch = curl_init();
 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers_prepped);
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_TIMEOUT, $GLOBALS['cfg']['http_timeout']);
 		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
@@ -70,7 +70,12 @@
 		# return
 		#
 
-	        if ($info['http_code'] != "200"){
+		$status = $info['http_code'];
+
+		# http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2
+		# http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_Success (note HTTP 207 WTF)
+
+	        if (($status < 200) || ($status > 299)){
 
 			return array(
 				'ok'		=> 0,
