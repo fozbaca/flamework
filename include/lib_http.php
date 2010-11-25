@@ -9,18 +9,30 @@
 
 	########################################################################
 
-	function http_get($url){
+	function http_head($url, $headers=array()){
+		return http_get($url, $headers, 'head only');
+	}
+
+	########################################################################
+
+	function http_get($url, $headers=array(), $head_only=0){
+
+		$headers = _http_prepare_outgoing_headers($headers);
 
 		$ch = curl_init();
 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:')); # Get around error 417
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_TIMEOUT, $GLOBALS['cfg']['http_timeout']);
 		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 		curl_setopt($ch, CURLOPT_HEADER, true);
 
+		if ($head_only){
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'HEAD');
+			curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+		}
 
 		#
 		# execute request
@@ -49,7 +61,9 @@
 
 		$headers_in = http_parse_headers($head, '_status');
 		$headers_out = http_parse_headers($head_out, '_request');
-		log_notice("http", "GET $url", $end-$start);
+
+		$method = ($head_only)? 'HEAD' : 'GET';
+		log_notice("http", "{$method} {$url}", $end-$start);
 
 
 		#
@@ -116,6 +130,23 @@
 		}
 
 		return $out;
+	}
+
+	########################################################################
+
+	function _http_prepare_outgoing_headers($headers=array()){
+
+		$prepped = array();
+
+		if (! isset($headers['Expect'])){
+			$headers['Expect'] = '';	# Get around error 417
+		}
+
+		foreach ($headers as $key => $value){
+			$prepped[] = "{$key}: {$value}";
+		}
+
+		return $prepped;
 	}
 
 	########################################################################
