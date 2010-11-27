@@ -39,7 +39,13 @@
 
 		if ($force_logout) login_do_logout();
 
-		header("location: $redir");
+		$base_url = isset($GLOBALS['cfg']) && isset($GLOBALS['cfg']['abs_root_url'])
+		    ? rtrim($GLOBALS['cfg']['abs_root_url'], '/')
+		    : '';
+		
+		$redir = ltrim($redir, '/');
+		
+		header("Location: {$base_url}/{$redir}");
 		exit;
 	}
 
@@ -95,12 +101,16 @@
 		$auth_cookie = login_generate_auth_cookie($user);
 		login_set_cookie($GLOBALS['cfg']['auth_cookie_name'], $auth_cookie);
 
+		$base_url = isset($GLOBALS['cfg']) && isset($GLOBALS['cfg']['abs_root_url'])
+		    ? rtrim($GLOBALS['cfg']['abs_root_url'], '/')
+		    : '';
+		
 		if (! $redir){
-			$redir = '/';
+			$redir = "{$base_url}/";
 		}
 
 		$redir = urlencode($redir);
-		header("location: /checkcookie/?redir={$redir}");
+		header("Location: {$base_url}/checkcookie/?redir={$redir}");
 		exit;
 	}
 
