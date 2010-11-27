@@ -14,10 +14,14 @@
 
 		if ($GLOBALS['cfg']['user']['id']) return;
 
+		$base_url = isset($GLOBALS['cfg']) && isset($GLOBALS['cfg']['abs_root_url'])
+		    ? rtrim($GLOBALS['cfg']['abs_root_url'], '/')
+		    : '';
+		
 		if ($redir){
-			header("location: /signin/?redir=".urlencode($redir));
+			header("Location: {$base_url}/signin/?redir=".urlencode($redir));
 		}else{
-			header("location: /signin/");
+			header("Location: {$base_url}/signin/");
 		}
 		exit;
 	}
