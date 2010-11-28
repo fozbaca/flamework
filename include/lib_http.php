@@ -10,12 +10,12 @@
 	########################################################################
 
 	function http_head($url, $headers=array()){
-		return http_get($url, $headers, 'head only');
+		return http_get($url, $headers, array('head' => 1));
 	}
 
 	########################################################################
 
-	function http_get($url, $headers=array(), $head_only=0){
+	function http_get($url, $headers=array(), $more=array()){
 
 		$headers_prepped = _http_prepare_outgoing_headers($headers);
 
@@ -29,7 +29,7 @@
 		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 		curl_setopt($ch, CURLOPT_HEADER, true);
 
-		if ($head_only){
+		if ($more['head']){
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'HEAD');
 			curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 		}
@@ -62,7 +62,7 @@
 		$headers_in = http_parse_headers($head, '_status');
 		$headers_out = http_parse_headers($head_out, '_request');
 
-		$method = ($head_only)? 'HEAD' : 'GET';
+		$method = ($more['head']) ? 'HEAD' : 'GET';
 		log_notice("http", "{$method} {$url}", $end-$start);
 
 
@@ -71,6 +71,14 @@
 		#
 
 		$status = $info['http_code'];
+
+		if (($status == 301 || $status == 302) && $more['follow_redirects']){
+
+			$more['follow_redirects'] ++;	# should we check to see that we're not trapped in a loop?
+
+			$redirect = $headers_out['host'] . $headers_in['location'];
+			return http_get($redirect, $headers, $more);
+		}
 
 		# http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2
 		# http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_Success (note HTTP 207 WTF)
