@@ -179,7 +179,7 @@
 	loadlib('smarty');	# smarty comes next, since other libs register smarty modules
 	loadlib('utf8');	# make sure utf8/header stuff is present in case we need to take the site down
 
-	if (($GLOBALS['cfg']['site_disabled']) && (! $this_is_shell)){
+	if (($GLOBALS['cfg']['disable_site']) && (! $this_is_shell)){
 		$smarty->display("page_site_disabled.txt");
 		exit();
 	}
