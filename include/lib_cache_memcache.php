@@ -39,7 +39,7 @@
 
 	function cache_memcache_set($cache_key, $data){
 
-		$memcache = $GLOBALS['cfg']['memcache_cache_conn'];
+		$memcache = $GLOBALS['cfg']['memcache_conn'];
 
 		if (! $memcache){
 			return array( 'ok' => 0 );
@@ -53,13 +53,13 @@
 
 	function cache_memcache_unset($cache_key){
 
-		$memcache = $GLOBALS['cfg']['memcache_cache_conn'];
+		$memcache = $GLOBALS['cfg']['memcache_conn'];
 
 		if (! $memcache){
 			return array( 'ok' => 0 );
 		}
 
-		$ok = $memcache->unset($cache_key);
+		$ok = $memcache->delete($cache_key);
 		return array( 'ok' => $ok );
 	}
 
