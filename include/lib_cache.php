@@ -23,7 +23,13 @@
 			);
 		}
 
-		# fetch from memcache, etc. here
+		# remote cache?
+
+		if ($engine = $GLOBALS['cfg']['remote_cache_engine']){
+
+			$func = "cache_{$engine}_get";
+			return call_user_func_array($func, array($cache_key));
+		}
 
 		return array( 'ok' => 0 );
 	}
@@ -39,7 +45,13 @@
 			$GLOBALS['local_cache'][$cache_key] = $data;
 		}
 
-		# store in memcache, etc. here
+		# remote cache?
+
+		if ($engine = $GLOBALS['cfg']['remote_cache_engine']){
+
+			$func = "cache_{$engine}_set";
+			$rsp = call_user_func_array($func, array($cache_key, $data));
+		}
 
 		return array( 'ok' => 1 );
 	}
@@ -55,7 +67,11 @@
 			unset($GLOBALS['local_cache'][$cache_key]);
 		}
 
-		# remove from memcache, etc. here
+		if ($engine = $GLOBALS['cfg']['remote_cache_engine']){
+
+			$func = "cache_{$engine}_unset";
+			$rsp = call_user_func_array($func, array($cache_key));
+		}
 
 		return array( 'ok' => 1 );
 	}

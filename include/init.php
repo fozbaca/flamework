@@ -74,7 +74,7 @@
 			return $lib;
 		}
 
-		return FLAMEWORK_INCLUDE_DIR . $lib;		
+		return FLAMEWORK_INCLUDE_DIR . $lib;
 	}
 
 
@@ -121,6 +121,23 @@
 			1 => $GLOBALS['cfg']['db_main']['name'],
 		);
 
+	}
+
+	#
+	# Remote caches
+	#
+
+	if (isset($GLOBALS['cfg']['remote_cache_engine'])){
+
+		# memcache
+
+		if ($GLOBALS['cfg']['remote_cache_engine'] == 'memcache'){
+
+			loadlib("cache_memcache");
+			$GLOBALS['cfg']['memcache_conn'] = cache_memcache_init($GLOBALS['cfg']['memcache_host'], $GLOBALS['cfg']['memcache_port']);
+		}
+
+		# redis?
 	}
 
 	#
