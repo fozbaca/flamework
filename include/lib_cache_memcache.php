@@ -8,7 +8,6 @@
 
 		if (! $memcache->connect($host, $port)){
 			$memcache = null;
-			log_notice("Failed to connect to memcache!");
 		}
 
 		return $memcache;
