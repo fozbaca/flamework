@@ -28,7 +28,10 @@
 		if ($engine = $GLOBALS['cfg']['remote_cache_engine']){
 
 			$func = "cache_{$engine}_get";
-			return call_user_func_array($func, array($cache_key));
+
+			if (function_exists($func)){
+				return call_user_func_array($func, array($cache_key));
+			}
 		}
 
 		return array( 'ok' => 0 );
@@ -50,7 +53,10 @@
 		if ($engine = $GLOBALS['cfg']['remote_cache_engine']){
 
 			$func = "cache_{$engine}_set";
-			$rsp = call_user_func_array($func, array($cache_key, $data));
+
+			if (function_exists($func)){
+				$rsp = call_user_func_array($func, array($cache_key, $data));
+			}
 		}
 
 		return array( 'ok' => 1 );
@@ -70,7 +76,10 @@
 		if ($engine = $GLOBALS['cfg']['remote_cache_engine']){
 
 			$func = "cache_{$engine}_unset";
-			$rsp = call_user_func_array($func, array($cache_key));
+
+			if (function_exists($func)){
+				$rsp = call_user_func_array($func, array($cache_key));
+				}
 		}
 
 		return array( 'ok' => 1 );
