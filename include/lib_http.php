@@ -29,10 +29,42 @@
 		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 		curl_setopt($ch, CURLOPT_HEADER, true);
 
+		$method = 'GET';
+
 		if ($more['head']){
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'HEAD');
 			curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+			$method = 'HEAD';
 		}
+
+		return _http_request($method, $url, $ch);
+	}
+
+	########################################################################
+
+	function http_post($url, $post_fields, $headers=array(), $more=array()){
+
+		$headers_prepped = _http_prepare_outgoing_headers($headers);
+
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers_prepped);
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_TIMEOUT, $GLOBALS['cfg']['http_timeout']);
+		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+		curl_setopt($ch, CURLOPT_HEADER, true);
+
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+
+		return _http_request('POST', $url, $ch);
+	}
+
+	########################################################################
+
+	function _http_request($method, $url, $ch){
 
 		#
 		# execute request
@@ -62,9 +94,7 @@
 		$headers_in = http_parse_headers($head, '_status');
 		$headers_out = http_parse_headers($head_out, '_request');
 
-		$method = ($more['head']) ? 'HEAD' : 'GET';
 		log_notice("http", "{$method} {$url}", $end-$start);
-
 
 		#
 		# return
@@ -72,7 +102,7 @@
 
 		$status = $info['http_code'];
 
-		if (($status == 301 || $status == 302) && $more['follow_redirects']){
+		if ($method != 'POST' && $more['follow_redirects'] && ($status == 301 || $status == 302)){
 
 			$more['follow_redirects'] ++;	# should we check to see that we're not trapped in a loop?
 
@@ -83,11 +113,11 @@
 		# http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2
 		# http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_Success (note HTTP 207 WTF)
 
-	        if (($status < 200) || ($status > 299)){
+		if (($status < 200) || ($status > 299)){
 
 			return array(
 				'ok'		=> 0,
-				'error'		=> 'http_failed',
+				'error'	=> 'http_failed',
 				'code'		=> $info['http_code'],
 				'url'		=> $url,
 				'info'		=> $info,
