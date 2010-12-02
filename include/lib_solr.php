@@ -10,6 +10,10 @@
 
 	function solr_select($url, $params=array(), $more=array()){
 
+		$params['wt'] = 'json';
+
+		#
+
 		$str_params = implode('&', $params);
 
 		$cache_key = "solr_select_" . md5($str_params);
