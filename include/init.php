@@ -124,23 +124,6 @@
 	}
 
 	#
-	# Remote caches
-	#
-
-	if (isset($GLOBALS['cfg']['remote_cache_engine'])){
-
-		# memcache
-
-		if ($GLOBALS['cfg']['remote_cache_engine'] == 'memcache'){
-
-			loadlib("cache_memcache");
-			$GLOBALS['cfg']['memcache_conn'] = cache_memcache_init($GLOBALS['cfg']['memcache_host'], $GLOBALS['cfg']['memcache_port']);
-		}
-
-		# redis?
-	}
-
-	#
 	# install an error handler to check for dubious notices?
 	# we do this because we only care about one of the notices
 	# that gets generated. we only want to run this code in

@@ -5,6 +5,7 @@
 	#
 
 	$GLOBALS['local_cache'] = array();
+	$GLOBALS['remote_cache_conns'] = array();
 
 	#################################################################
 
@@ -23,18 +24,9 @@
 			);
 		}
 
-		# remote cache?
+		$remote_rsp = _cache_do_remote('get', $cache_key);
 
-		if ($engine = $GLOBALS['cfg']['remote_cache_engine']){
-
-			$func = "cache_{$engine}_get";
-
-			if (function_exists($func)){
-				return call_user_func_array($func, array($cache_key));
-			}
-		}
-
-		return array( 'ok' => 0 );
+		return $remote_rsp;
 	}
 
 	#################################################################
@@ -48,18 +40,11 @@
 			$GLOBALS['local_cache'][$cache_key] = $data;
 		}
 
-		# remote cache?
+		$remote_rsp = _cache_do_remote('set', $cache_key, $data);
 
-		if ($engine = $GLOBALS['cfg']['remote_cache_engine']){
-
-			$func = "cache_{$engine}_set";
-
-			if (function_exists($func)){
-				$rsp = call_user_func_array($func, array($cache_key, $data));
-			}
-		}
-
-		return array( 'ok' => 1 );
+		return array(
+			'ok' => 1
+		);
 	}
 
 	#################################################################
@@ -73,22 +58,38 @@
 			unset($GLOBALS['local_cache'][$cache_key]);
 		}
 
-		if ($engine = $GLOBALS['cfg']['remote_cache_engine']){
+		$remote_rsp = _cache_do_remote('unset', $cache_key);
 
-			$func = "cache_{$engine}_unset";
-
-			if (function_exists($func)){
-				$rsp = call_user_func_array($func, array($cache_key));
-				}
-		}
-
-		return array( 'ok' => 1 );
+		return array(
+			'ok' => 1
+		);
 	}
 
 	#################################################################
 
 	function _cache_prepare_cache_key($key){
 		return $key;
+	}
+
+	#################################################################
+
+	function _cache_do_remote($method, $key, $data=null){
+
+		$engine = $GLOBALS['cfg']['remote_cache_engine'];
+
+		if (! $engine){
+			return array( 'ok' => 0, 'error' => 'Remote caching is not enabled' );
+		}
+
+		$remote_lib = "cache_{$engine}";
+		$remote_func = "cache_{$engine}_{$method}";
+
+		$args = ($data) ? array($key, $data) : array($key);
+
+		loadlib($remote_lib);
+		$rsp = call_user_func_array($remote_func, $args);
+
+		return $rsp;
 	}
 
 	#################################################################
