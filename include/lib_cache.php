@@ -11,6 +11,14 @@
 
 	function cache_get($cache_key){
 
+		if ($GLOBALS['cfg']['cache_force_refresh']){
+
+			return array(
+				'ok' => 0,
+				'error' => 'force refresh'
+			);
+		}
+
 		$cache_key = _cache_prepare_cache_key($cache_key);
 		log_notice("cache", "fetch cache key {$cache_key}");
 
@@ -68,7 +76,12 @@
 	#################################################################
 
 	function _cache_prepare_cache_key($key){
-		return $key;
+
+		if (! isset($GLOBALS['cfg']['cache_prefix'])){
+			return $key;
+		}
+
+		return "{$GLOBALS['cfg']['cache_prefix']}_{$key}";
 	}
 
 	#################################################################
@@ -88,6 +101,9 @@
 
 		loadlib($remote_lib);
 		$rsp = call_user_func_array($remote_func, $args);
+
+		$rsp['cache_key'] = $key;
+		$rsp['cache'] = $engine;
 
 		return $rsp;
 	}
