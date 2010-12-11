@@ -4,8 +4,8 @@
 	# $Id$
 	#
 
-	$GLOBALS['local_cache'] = array();
-	$GLOBALS['remote_cache_conns'] = array();
+	$GLOBALS['cache_local'] = array();
+	$GLOBALS['cache_remote_conns'] = array();
 
 	#################################################################
 
@@ -22,13 +22,13 @@
 		$cache_key = _cache_prepare_cache_key($cache_key);
 		log_notice("cache", "fetch cache key {$cache_key}");
 
-		if (isset($GLOBALS['local_cache'][$cache_key])){
+		if (isset($GLOBALS['cache_local'][$cache_key])){
 
 			return array(
 				'ok' => 1,
 				'cache' => 'local',
 				'cache_key' => $cache_key,
-				'data' => $GLOBALS['local_cache'][$cache_key],
+				'data' => $GLOBALS['cache_local'][$cache_key],
 			);
 		}
 
@@ -45,7 +45,7 @@
 		log_notice("cache", "set cache key {$cache_key}");
 
 		if ($store_locally){
-			$GLOBALS['local_cache'][$cache_key] = $data;
+			$GLOBALS['cache_local'][$cache_key] = $data;
 		}
 
 		$remote_rsp = _cache_do_remote('set', $cache_key, $data);
@@ -62,8 +62,8 @@
 		$cache_key = _cache_prepare_cache_key($cache_key);
 		log_notice("cache", "unset cache key {$cache_key}");
 
-		if (isset($GLOBALS['local_cache'][$cache_key])){
-			unset($GLOBALS['local_cache'][$cache_key]);
+		if (isset($GLOBALS['cache_local'][$cache_key])){
+			unset($GLOBALS['cache_local'][$cache_key]);
 		}
 
 		$remote_rsp = _cache_do_remote('unset', $cache_key);
@@ -77,7 +77,7 @@
 
 	function _cache_prepare_cache_key($key){
 
-		if (! isset($GLOBALS['cfg']['cache_prefix'])){
+		if (! $GLOBALS['cfg']['cache_prefix']){
 			return $key;
 		}
 
@@ -88,7 +88,7 @@
 
 	function _cache_do_remote($method, $key, $data=null){
 
-		$engine = $GLOBALS['cfg']['remote_cache_engine'];
+		$engine = trim($GLOBALS['cfg']['cache_remote_engine']);
 
 		if (! $engine){
 			return array( 'ok' => 0, 'error' => 'Remote caching is not enabled' );
