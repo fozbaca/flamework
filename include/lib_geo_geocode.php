@@ -64,11 +64,11 @@
 		);
 		
 		if ($http_rsp['ok']){
-			
+
 			# pass in a 1 to disable 'shit-mode'
 			$geocode_response = json_decode($http_rsp['body'], 1);
 			
-			if ($geocode_response['ResultSet']['Found'] == 1){
+			if ($geocode_response['ResultSet']['Found'] >= 1){
 				
 				$results = $geocode_response['ResultSet']['Results'][0];
 				

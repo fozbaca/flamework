@@ -60,6 +60,11 @@
 
 	function cache_memcache_set($cache_key, $data){
 
+		if (! $data){
+			log_notice("cache", "missing data to set key {$cache_key}");
+			return array( 'ok' => 0, 'error' => 'missing data' );
+		}
+
 		$memcache = cache_memcache_connect();
 
 		if (! $memcache){
