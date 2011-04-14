@@ -12,16 +12,27 @@
 
 		$params['wt'] = 'json';
 
+		$_params = array();
+
+		foreach ($params as $k => $v){
+			$_params[] = "$k=" . urlencode($v);
+		}
+
+		$str_params = implode('&', $_params);
+
 		#
 
-		$str_params = implode('&', $params);
+		if (function_exists('cache_get')){
 
-		$cache_key = "solr_select_" . md5($str_params);
-		$cache = cache_get($cache_key);
+			$cache_key = "solr_select_" . md5($str_params);
+			$cache = cache_get($cache_key);
 
-		if ($cache['ok']){
-			return $cache['data'];
+			if ($cache['ok']){
+				return $cache['data'];
+			}
 		}
+
+		#
 
 		$http_rsp = http_post($url, $str_params);
 
@@ -44,7 +55,10 @@
 			'rows' => $json,	# this probably needs to be keyed off something I've forgotten about
 		);
 
-		cache_set($cache_key, $rsp);
+		if (function_exists('cache_set')){
+			cache_set($cache_key, $rsp);
+		}
+
 		return $rsp;
 	}
 

@@ -94,7 +94,9 @@
 		preg_match("/^([A-Z]+)\s/", $headers_out['_request'], $m);
 		$method = $m[1];
 
-		log_notice("http", "{$method} {$url}", $end-$start);
+		if (function_exists('log_notice')){
+			log_notice("http", "{$method} {$url}", $end-$start);
+		}
 
 		#
 		# return
