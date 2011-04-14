@@ -5,6 +5,9 @@
 	#
 
 	# This is *not* a general purpose wrapper library for talking to Solr.
+	# This is the just the stuff to wrap arguments in to a POST string and
+	# to json_decodify the results when they come back. It assumes you've
+	# already loaded Flamework's lib_http by the time you get here.
 
 	#################################################################
 
@@ -15,7 +18,12 @@
 		$_params = array();
 
 		foreach ($params as $k => $v){
-			$_params[] = "$k=" . urlencode($v);
+
+			$v = (is_array($v)) ? $v : array($v);
+
+			foreach ($v as $_v){
+				$_params[] = "$k=" . urlencode($_v);
+			}
 		}
 
 		$str_params = implode('&', $_params);
@@ -40,8 +48,7 @@
 			return $http_rsp;
 		}
 
-		$as_array = True;
-		$json = json_decode($http_rsp['body'], $as_array);
+		$json = json_decode($http_rsp['body'], "as a hash");
 
 		if (! $json){
 			return array(
@@ -52,7 +59,7 @@
 
 		$rsp = array(
 			'ok' => 1,
-			'rows' => $json,	# this probably needs to be keyed off something I've forgotten about
+			'data' => $json,
 		);
 
 		if (function_exists('cache_set')){
